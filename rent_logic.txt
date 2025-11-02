@@ -1,0 +1,76 @@
+Giờ mở cửa : 7-23h
+Giờ cho thuê theo khung 6 tiếng : 7-17h
+Điều kiện:
+*Buffer 1 tiếng 2 đầu khung thuê
+**Khung thuê theo giờ bắt buộc phải đủ 6 tiếng
+
+Về việc cho thuê:
++Đối với cho thuê theo giờ:
+->Nếu trong một ngày bất kỳ, nếu không có bất kỳ lịch thuê nào,không cần áp dụng  (*) nhưng phải áp dụng (**)
+->Nếu trong một ngày bất kỳ, nếu có 1 hoặc nhiều hơn một khung giờ đã cho thuê, áp dụng chặt chẽ (*) và (**)
++Các khung giờ cho thuê thỏa điều kiện (*) và (**)
+7-13h
+8-14h
+9-15h
+10-16h
+11-17h
+12-18h
+13-19h
+14-20h
+15-21h
+16-22h
+17-23h
+
++Đối với việc cho thuê theo ngày:
+-Chính sách: 
+***Nếu một ngày bất kỳ khách lấy máy trước 20h, thì phải hoàn vào trước 9h ngày cho thuê + số ngày đặt (Ví dụ: lấy máy vào lúc 18h ngày 4, thuê 3 ngày thì trả trước 9h ngày 7)
+****Nếu một ngày bất kỳ khách lấy máy sau 20h, thì lấy giờ nào thì hoàn đúng giờ đó vào ngày cho thuê + số ngày đặt (Ví dụ: lấy máy vào lúc 21h ngày 4, thuê 3 ngày thì trả vào lúc 21h ngày 7)
+Trường hợp trả giờ lẻ (vd : 12h15, 14h20, 16h37) : 
++Case 1: Nếu trả trước xh30 -> tính bằng x
++Case 2: Nếu trả sau xh30 ->tính bằng x+1
+
+
+|-------------DATABASE------------------------------------------------|
+
+|------------------------CUSTOMER-------------------------------------|
+| |Tên trường|---|Kiểu dữ liệu|---|Ý nghĩa|----|Ràng buộc|            |
+|---------------------------------------------------------------------|
+| |id|	         |INT/AUTO|	   |Mã khách hàng| |PRIMARY KEY|          | 
+| |name|	     |VARCHAR|	   |Tên khách|	   |NOT NULL|             |
+| |phone|	     |VARCHAR|	   |Số điện thoại| |NOT NULL, UNIQUE|     |
+| |email|	     |VARCHAR|	   |Email|	       |(NULL)|               |
+| |address|	     |VARCHAR|	   |Địa chỉ|	   |(NULL)|               |
+| |created_at|   |DATETIME|	   |Ngày tạo|	   |DEFAULT NOW|          |
+|---------------------------------------------------------------------|
+
+|--------------------------CAMERA-------------------------------------|
+| |Tên trường|---|Kiểu dữ liệu|---|Ý nghĩa|----|Ràng buộc|            |
+|---------------------------------------------------------------------|
+| |id|	         |INT/AUTO|	   |Mã máy ảnh|    |PRIMARY KEY|          | 
+| |name|	     |VARCHAR|	   |Tên máy|	   |NOT NULL, UNIQUE|     |
+| |model|	     |VARCHAR|	   |model|         |(NULL)|               |
+| |serial|	     |VARCHAR|	   |số serial|	   |(NULL,UNIQUE)|        |
+| |status|	     |VARCHAR|	   |Tình trạng|	   |DEFAULT 'active'|     |
+| |note|         |TEXT|	       |Ghi chú|	   |(NULL)|               |
+| |created_at|   |DATETIME|	   |Ngày nhập|	   |DEFAULT NOW|          |
+|---------------------------------------------------------------------|
+
+|--------------------------RENTAL-----------------------------------------|
+| |Tên trường|---|Kiểu dữ liệu|---|Ý nghĩa|----|Ràng buộc|                |
+|-------------------------------------------------------------------------|
+| |id|	         |INT/AUTO|	   |Mã phiếu thuê|     |PRIMARY KEY|          | 
+| |customer_id|	 |INT|	       |Mã khách hàng|     |FOREIGN KEY|          |
+| |camera_id|	 |INT|	       |Mã máy ảnh|        |FOREIGN KEY|          |
+| |rental_type|	 |VARCHAR|     |Loại thuê(h/d)|    |(NULL,UNIQUE)|        |
+| |rental_date|	 |DATE|	       |Ngày thuê|	       |DEFAULT 'active'|     |
+| |start_time|   |TIME|	       |Giờ bắt đầu|       |(NULL)|               |
+| |end_time|     |TIME|	       |Giờ kết thúc|      |DEFAULT NOW|          |
+| |return_date|  |DATE|	       |Ngày trả|	       |DEFAULT NOW|          |
+| |actual_return||DATETIME|	   |Thời điểm trả|     |DEFAULT NOW|          |
+| |status|       |VARCHAR|	   |Tình trạng thuê|   |DEFAULT NOW|          |
+| |note|         |TEXT|	       |Ghi chú|	       |DEFAULT NOW|          |
+| |created_at|   |DATETIME|	   |Ngày tạo booking|  |DEFAULT NOW|          |
+|-------------------------------------------------------------------------|
+
+Customer (1) --------< (N) Rental (N) >-------- (1) Camera
+

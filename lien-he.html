@@ -78,7 +78,6 @@
     </div>
   </header>
 
-  <main class="main">
 
     <!-- Page Title -->
     <div class="page-title" data-aos="fade">
@@ -103,15 +102,15 @@
         </div>
       </nav>
     </div><!-- End Page Title -->
-    <!--li test css-->
-    <style>
-      li{
-        font-family: var(--default-font);
-      }
-    </style>
+
+
+  <main class="main">
     <!-- Contact Section -->
     <section id="contact" class="contact section">
-
+      <div class="container" data-aos="fade-up">
+      <div id="calendar"></div>
+      <div id="bookingSections"></div>
+      </div>
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="info-wrap" data-aos="fade-up" data-aos-delay="200">
@@ -155,63 +154,8 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
-<!-- Dropdown chọn máy ảnh -->
-<div class="container mt-4">
-  <select id="cameraSelect" class="form-control">
-    <option value="" style="background:rgba(30,30,30,0.7);color:#fff;text-align:center;">-- Chọn máy ảnh --</option>
-    <option value="canon-g7x">Canon G7x Mark II</option>
-    <option value="fujifilm-x100vi">Fujifilm X100VI</option>
-  </select>
   <!-- Lịch -->
-  <div id="calendar" class="mt-4"></div>
-</div>
-
-<!-- Modal chọn giờ linh hoạt + form thuê -->
-<div id="slotModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#1f1f1f; padding:24px; border:1px solid #333; border-radius:12px; z-index:1000; max-width:520px; width:90%; color: #f0f0f0; font-family: 'Segoe UI', sans-serif">
-  <p style="margin-bottom: 12px; font-weight:600; color:#ffffff;">Chọn giờ thuê (6 tiếng)</p>
-  <div id="slot-container" style="display:flex; flex-direction:column; gap:10px; margin:10px 0;">
-    <label for="startHour">Bắt đầu lúc:</label>
-    <select id="startHour" class="form-control" style="width: 100%; margin-bottom: 10px;"></select>
-    <div id="conflictInfo" style="font-size: 14px; color: #999;"></div>
-  </div>
-  <div style="text-align: right">
-    <button type="button" onclick="closeModal()" class="btn btn-secondary" style="background:#444; color:#eee; border:none; padding:8px 16px; border-radius:6px;">Đóng</button>
-  </div>
-
-  <form id="bookingForm" style="display:none; margin-top:20px">
-    <p style="margin-bottom: 10px, font-weight:500, color:#dddddd;">Thông tin thuê</p>
-    <input type="hidden" name="camera" />
-    <input type="hidden" name="date" />
-    <input type="hidden" name="start" />
-    <input type="hidden" name="end" />
-
-    <div class="form-group">
-      <label>Họ và tên</label>
-      <input type="text" name="name" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" name="email" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Số điện thoại</label>
-      <input type="tel" name="phone" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Ghi chú</label>
-      <textarea name="note" class="form-control"></textarea>
-    </div>
-
-    <div style="margin-top:15px">
-      <button type="submit" class="btn btn-light" style="background:#2d89ef; color:#fff; border:none; padding:10px 20px; border-radius:6px">Gửi yêu cầu thuê</button>
-      <button type="button" onclick="closeModal()" class="btn btn-secondary" style="background:#444; color:#eee; border:none; padding:10px 20px; border-radius:6px">Hủy</button>
-    </div>
-  </form>
-</div>
-
-
-
-        <!--+++++++++++++++++++++++++End Booking Form+++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++End Booking Form+++++++++++++++++++++++++++++++++++++-->
     </div>
     </section><!-- /Contact Section -->
   </main>
@@ -256,7 +200,7 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-
+  <script src="./assets/js/booking.js"></script>
 </body>
 </html>
 
@@ -362,221 +306,127 @@
   background: rgba(255,255,255,0.95);
   color: #222;
 }
+.camera-card {
+  background: #000000;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 0;
+  overflow: hidden;
+}
+.camera-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  background: #000000;
+  border-bottom: 1px solid #333;
+  justify-content: space-between;
+}
+.camera-icon {
+  width: 28px; height: 28px; margin-right: 12px;
+}
+.camera-title {
+  font-family: --default-font;
+  color: #F2A7AD;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.camera-slots {
+  padding: 12px 18px;
+}
+.camera-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 18px;
+  background: #23272f;
+  border-radius: 0 0 8px 8px;
+  padding-bottom: 0; /* Đảm bảo không có khoảng trống khi đóng */
+  border-color: #F2A7AD;
+}
+.camera-body.open {
+  padding-bottom: 12px;
+  max-height: 800px; /* hoặc lớn hơn nếu cần */
+  background: transparent;
+  border-color: #F2A7AD;
+}
+.slot {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 1rem;
+}
+.slot.booked {
+  background: transparent;
+  color: #f65e5e;
+  font-family: --default-font;
+}
+.slot.available {
+  background: transparent;
+  color: #90ee90;
+  transition: background 0.2s;
+  font-family: --default-font;
+}
+.slot.available:hover {
+  background: #2dc4ff33;
+}
+.slot-status {
+  margin-left: auto;
+  font-size: 0.95em;
+  color: #fff;
+  font-weight: 500;
+}
+.book-btn {
+  margin-left: auto;
+  background: transparent;
+  color: #F2A7AD;
+  border-color: #F2A7AD;
+  border-radius: 5px;
+  padding: 3px 12px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.book-btn:hover {
+  background: #717171;
+}
+.accordion-arrow {
+  font-size: 1.2em;
+  color: #F2A7AD;
+  margin-left: 10px;
+  transition: transform 0.2s;
+}
+#bookingSections h5 {
+  font-family: --default-font;
+  text-align: center;
+  font-size: 3rem;
+  color: #F2A7AD;
+  margin-bottom: 18px;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+#bookingSections {
+  display: none;
+  background: rgba(0,0,0,0.0); /* nền trong suốt */
+  border: 2px solid #fff;
+  border-radius: 18px;
+  max-width: 900px;
+  margin: 30px auto 0 auto;
+  padding: 24px 10px 30px 10px;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: --default-font;
+
+}
+
+@media (max-width: 600px) {
+  #bookingSections {
+    max-width: 98vw;
+    padding: 10px 2vw 18px 2vw;
+    border-radius: 10px;
+  }
+}
 </style>
 
-<script>
-// Constants
-const fixedSlots = [
-  { id: "fixed-1", label: "09:00 – 15:00", start: "09:00", end: "15:00" },
-  { id: "fixed-2", label: "16:00 – 22:00", start: "16:00", end: "22:00" }
-];
-const flexibleStartOptions = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
-const buffer = 1; // giờ đệm
-
-// Fake data mẫu
-const mockBookings = {
-  "canon-g7x": {
-    // Đã thuê khung cố định sáng
-    "2025-08-10": ["09:00-15:00"],
-
-    // Đã thuê khung cố định chiều
-    "2025-08-11": ["16:00-22:00"],
-
-    // Đã thuê cả 2 khung
-    "2025-08-12": ["09:00-15:00", "16:00-22:00"],
-
-    // Đã thuê linh hoạt nhưng gần khung cố định
-    "2025-08-13": ["10:00-16:00"]
-  },
-
-  "fujifilm-x100vi": {
-    "2025-08-15": ["09:00-15:00"],
-    "2025-08-16": ["10:00-16:00"],
-    "2025-08-17": ["11:00-17:00"],
-    "2025-08-18": ["12:00-18:00"],
-    "2025-08-19": ["13:00-19:00"],
-    "2025-08-20": ["14:00-20:00"],
-    "2025-08-21": ["15:00-21:00"],
-    "2025-08-22": ["16:00-22:00"],
-    "2025-08-23": ["17:00-23:00"]
-  }
-};
-
-
-// Render option giờ dựa trên logic
-function showFlexibleHourOptions(date, cameraId, bookedRanges) {
-  const select = document.getElementById("startHour");
-  const info = document.getElementById("conflictInfo");
-  const form = document.getElementById("bookingForm");
-  select.innerHTML = "";
-  info.innerHTML = "";
-  form.style.display = "none";
-
-  
-  // Hiển thị các khung đã kín
-  if (bookedRanges.length > 0) {
-    info.innerHTML = `<strong>Đã kín:</strong><br>${bookedRanges.map(r => `• ${r}`).join('<br>')}`;
-  }
-
-  // Lọc option theo logic cố định và linh hoạt
-  const availableOptions = [];
-
-  // Thêm khung cố định nếu không bị chiếm
-  fixedSlots.forEach(slot => {
-    if (!bookedRanges.some(r => isConflict(slot.start, slot.end, r, buffer))) {
-      availableOptions.push({ label: `Khung cố định: ${slot.label}`, value: `${slot.start}-${slot.end}` });
-    }
-  });
-
-  // Thêm các khung linh hoạt từ 09:00–17:00
-  flexibleStartOptions.forEach(start => {
-    const end = addHours(start, 6);
-    if (parseInt(end.split(":")[0]) <= 23) {
-      const bufferedStart = subtractHours(start, buffer);
-      const bufferedEnd = addHours(end, buffer);
-      const conflict = bookedRanges.some(r => isConflict(bufferedStart, bufferedEnd, r, 0));
-      if (!conflict) {
-        availableOptions.push({ label: `Linh hoạt: ${start} – ${end}`, value: `${start}-${end}` });
-      }
-    }
-  });
-
-// Render các option không trùng
-const rendered = new Set();
-availableOptions.forEach(opt => {
-  if (!rendered.has(opt.value)) {
-    const o = document.createElement("option");
-    o.textContent = opt.label;
-    o.value = opt.value;
-    select.appendChild(o);
-    rendered.add(opt.value);
-  }
-});
-
-  select.onchange = () => {
-    form.style.display = 'block';
-    const [start, end] = select.value.split('-');
-    form.camera.value = cameraId;
-    form.date.value = date;
-    form.start.value = start;
-    form.end.value = end;
-  };
-
-  document.getElementById("slotModal").style.display = 'block';
-}
-
-function addHours(time, h) {
-  const [hour, min] = time.split(":").map(Number);
-  const newHour = hour + h;
-  return `${String(newHour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-}
-
-function subtractHours(time, h) {
-  return addHours(time, -h);
-}
-
-function isConflict(start1, end1, range, buffer = 0) {
-  const [rStart, rEnd] = range.split("-");
-  const s1 = subtractHours(start1, buffer);
-  const e1 = addHours(end1, buffer);
-  return !(e1 <= rStart || s1 >= rEnd);
-}
-let calendar;
-const cameraSelect = document.getElementById("cameraSelect");
-const calendarEl = document.getElementById("calendar");
-
-cameraSelect.addEventListener("change", function () {
-  const selectedCamera = this.value;
-  if (!selectedCamera) return;
-
-  if (calendar) calendar.destroy();
-
-calendar = new FullCalendar.Calendar(calendarEl, {
-  initialView: "dayGridMonth",
-  locale: "vi",
-  height: "auto",
-  selectable: true,
-  eventTimeFormat: false,
-  eventDisplay: 'block',
-  headerToolbar: {
-    left: "prev,next today",
-    center: "title",
-    right: ""
-  },
-  events: function (info, successCallback) {
-  const data = mockBookings[selectedCamera] || {};
-  const events = [];
-
-  Object.entries(data).forEach(([date, slots]) => {
-    const availableOptions = [];
-
-    // Kiểm tra khung cố định
-    fixedSlots.forEach(slot => {
-      if (!slots.some(r => isConflict(slot.start, slot.end, r, buffer))) {
-        availableOptions.push(`${slot.start}-${slot.end}`);
-      }
-    });
-
-    // Kiểm tra linh hoạt
-    flexibleStartOptions.forEach(start => {
-      const end = addHours(start, 6);
-      if (parseInt(end.split(":")[0]) <= 23) {
-        const bufferedStart = subtractHours(start, buffer);
-        const bufferedEnd = addHours(end, buffer);
-        const conflict = slots.some(r => isConflict(bufferedStart, bufferedEnd, r, 0));
-        if (!conflict) {
-          availableOptions.push(`${start}-${end}`);
-        }
-      }
-    });
-
-    // Nếu không còn slot nào hợp lệ → đánh dấu kín lịch (background đỏ)
-    if (availableOptions.length === 0) {
-      events.push({
-        title: "KÍN LỊCH",
-        start: date,
-        display: "background",
-        color: "#d11313"
-      });
-    }
-
-    // Vẫn hiển thị các slot đã thuê
-    slots.forEach(range => {
-      const [start, end] = range.split("-");
-      events.push({
-        title: `Đã thuê (${range})`,
-        start: `${date}T${start}`,
-        end: `${date}T${end}`,
-        display: "block",
-        color: "#2dc4ff"
-      });
-    });
-  });
-
-  successCallback(events);
-},
-
-  dateClick: function (info) {
-    const date = info.dateStr;
-    const booked = mockBookings[selectedCamera]?.[date] || [];
-    showFlexibleHourOptions(date, selectedCamera, booked);
-    if (availableOptions.length === 0) {
-  info.innerHTML = "<strong style='color:#d11313'>🔒 Ngày này đã kín lịch, vui lòng chọn ngày khác.</strong>";
-  document.getElementById("slotModal").style.display = 'block';
-  return;
-}
-
-  }
-});
-
-
-  calendar.render();
-});
-function closeModal() {
-  document.getElementById("slotModal").style.display = 'none';
-  document.getElementById("bookingForm").style.display = 'none';
-  document.getElementById("bookingForm").reset();
-  document.getElementById("startHour").value = "";
-  document.getElementById("conflictInfo").innerHTML = "";
-}
-</script>
