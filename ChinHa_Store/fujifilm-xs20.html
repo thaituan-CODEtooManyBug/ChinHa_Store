@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Dashboard - Chin Hạ Store</title>
+    <meta name="description" content="Admin dashboard for managing cameras and rentals.">
+    <meta name="keywords" content="admin, dashboard, camera, management, rentals">
+
+    <!-- Favicons -->
+    <link href="assets/img/logo.jpg" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard">
+
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+                <h1>CHIN HẠ STORE</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index.html">Trang Chủ</a></li>
+                    <li><a href="lien-he.html">Liên Hệ</a></li>
+                    <li><a href="admin.html" class="active">Quản Trị</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 class="text-center my-4">Quản Lý Máy Ảnh</h1>
+
+            <div class="mb-3">
+                <button id="addCameraBtn" class="btn btn-primary">Thêm Máy Ảnh</button>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Máy</th>
+                        <th>Model</th>
+                        <th>Tình Trạng</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="cameraList">
+                    <!-- Camera entries will be populated here -->
+                </tbody>
+            </table>
+
+            <h2 class="mt-5">Thống Kê Thuê</h2>
+            <div id="rentalStats">
+                <!-- Rental statistics will be displayed here -->
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="container text-center">
+            <p>© <span>Thiết kế bởi PhotoFolio</span> <strong class="px-1 sitename">PhotoFolio</strong> <span>Dựng Web bởi ThaiTuan</span></p>
+        </div>
+    </footer>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+
+    <!-- Main JS File -->
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

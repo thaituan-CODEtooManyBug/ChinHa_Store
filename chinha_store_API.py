@@ -64,3 +64,62 @@ def bookings_by_date(date: str = Query(...)):
             "booked_slots": booking_dict.get(cam["id"], [])
         })
     return JSONResponse(result)
+
+@app.get("/api/cameras")
+def get_cameras():
+    conn = get_db_connection()
+    cameras = conn.execute("SELECT id, name, model, status FROM camera").fetchall()
+    conn.close()
+    result = []
+    for cam in cameras:
+        result.append({
+            "id": cam["id"],
+            "name": cam["name"],
+            "model": cam["model"],
+            "status": cam["status"]
+        })
+    return JSONResponse(result)
+
+@app.get("/api/rental-stats")
+def get_rental_stats():
+    conn = get_db_connection()
+    total_rentals = conn.execute("SELECT COUNT(*) FROM rental").fetchone()[0]
+    active_rentals = conn.execute("SELECT COUNT(*) FROM rental WHERE status = 'active'").fetchone()[0]
+    conn.close()
+    return JSONResponse({
+        "total_rentals": total_rentals,
+        "active_rentals": active_rentals
+    })
+
+@app.get("/api/rentals-detail")
+def get_rentals_detail():
+    conn = get_db_connection()
+    rentals = conn.execute("""
+        SELECT
+            r.id,
+            c.name as customer_name,
+            c.phone as customer_phone,
+            r.rental_type,
+            r.rental_date,
+            r.return_date,
+            r.start_time,
+            r.end_time
+        FROM rental r
+        JOIN customer c ON r.customer_id = c.id
+        ORDER BY r.created_at DESC
+        LIMIT 50
+    """).fetchall()
+    conn.close()
+    result = []
+    for r in rentals:
+        result.append({
+            "id": r["id"],
+            "customer_name": r["customer_name"],
+            "customer_phone": r["customer_phone"],
+            "rental_type": r["rental_type"],
+            "rental_date": r["rental_date"],
+            "return_date": r["return_date"],
+            "start_time": r["start_time"],
+            "end_time": r["end_time"]
+        })
+    return JSONResponse(result)

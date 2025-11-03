@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Dashboard - Chin Hạ Store</title>
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #ffffff;
+            color: #fff;
+            padding-top: 30px;
+        }
+
+        .sidebar .nav-link {
+            color: #bfc9d4;
+            font-weight: 500;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background: #156fa3;
+            color: #ffffff;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 8px;
+        }
+
+        .main-content {
+            padding: 40px 30px 30px 30px;
+        }
+
+        .admin-tab {
+            display: none;
+        }
+
+        .admin-tab.active {
+            display: block;
+            background: #ffffff;
+            border: #156fa3;
+        }
+        .admin-tab h1{
+            color: #020202;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                padding-top: 10px;
+            }
+
+            .main-content {
+                padding: 20px 5px;
+            }
+        }
+        .cameraManager {
+            background-color: #ffffff;
+            border-color: #156fa3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block sidebar">
+                <div class="position-sticky">
+                    <div class="text-center mb-4">
+                        <a href="index.html" class="text-decoration-none text-white">
+                            <h4>CHIN HẠ ADMIN</h4>
+                        </a>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-target="rentalStats" href="#">
+                                <i class="bi bi-calendar-check"></i> Quản lý lịch thuê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-target="cameraManager" href="#">
+                                <i class="bi bi-camera"></i> Quản lý máy ảnh
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-target="customerManager" href="#">
+                                <i class="bi bi-people"></i> Quản lý dữ liệu khách hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-target="editRental" href="#">
+                                <i class="bi bi-pencil-square"></i> Chỉnh sửa lịch thuê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-target="statChart" href="#">
+                                <i class="bi bi-bar-chart"></i> Thống kê dạng biểu đồ
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto main-content">
+                <section id="cameraManager" class="admin-tab">
+                    <h1>Quản Lý Máy Ảnh</h1>
+                    <div class="mb-3 text-end">
+                        <button id="addCameraBtn" class="btn btn-primary">Thêm Máy Ảnh</button>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Máy</th>
+                                <th>Model</th>
+                                <th>Tình Trạng</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cameraList">
+                            <!-- Camera entries will be populated here -->
+                        </tbody>
+                    </table>
+                </section>
+                <section id="rentalStats" class="admin-tab">
+                    <h3>Thống Kê Cho Thuê</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="rentalStatsTable">
+                            <thead>
+                                <tr>
+                                    <th>Tên khách</th>
+                                    <th>SĐT</th>
+                                    <th>Kiểu thuê</th>
+                                    <th>Ngày thuê</th>
+                                    <th>Ngày trả</th>
+                                    <th>Giờ nhận</th>
+                                    <th>Giờ trả</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statsContent">
+                                <tr>
+                                    <td colspan="7">Đang tải thống kê...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section id="dailyStats" class="admin-tab">
+                    <h3>Thống Kê Theo Ngày</h3>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input type="date" id="statDate" class="form-control" value="">
+                        </div>
+                        <div class="col-md-2">
+                            <button id="loadDailyStats" class="btn btn-info">Xem</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dailyStatsTable">
+                            <thead>
+                                <tr>
+                                    <th>Tên máy</th>
+                                    <th>Model</th>
+                                    <th>Khung giờ đã đặt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dailyStatsContent">
+                                <tr>
+                                    <td colspan="3">Chọn ngày để xem thống kê.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section id="customerManager" class="admin-tab">
+                    <h3>Quản Lý Dữ Liệu Khách Hàng</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="customerTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên khách</th>
+                                    <th>SĐT</th>
+                                    <th>Email</th>
+                                    <th>Địa chỉ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerList">
+                                <tr>
+                                    <td colspan="5">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section id="editRental" class="admin-tab">
+                    <h3>Chỉnh Sửa Lịch Thuê</h3>
+                    <p>Chức năng này sẽ được phát triển thêm.</p>
+                </section>
+                <section id="statChart" class="admin-tab">
+                    <h3>Thống Kê Dạng Biểu Đồ</h3>
+                    <canvas id="rentalChart" height="80"></canvas>
+                    <p class="text-muted">Biểu đồ sẽ hiển thị khi có dữ liệu.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/dxshb.js"></script>
+    <script>
+        // Fetch khách hàng
+        fetch("http://localhost:5583/api/customers")
+            .then(res => res.json())
+            .then(list => {
+                const tbody = document.getElementById("customerList");
+                if (!list.length) {
+                    tbody.innerHTML = `<tr><td colspan="5">Không có dữ liệu.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = "";
+                list.forEach(c => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${c.id}</td>
+                            <td>${c.name}</td>
+                            <td>${c.phone}</td>
+                            <td>${c.email || ""}</td>
+                            <td>${c.address || ""}</td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(() => {
+                document.getElementById("customerList").innerHTML = `<tr><td colspan="5">Không thể tải dữ liệu.</td></tr>`;
+            });
+
+        // Biểu đồ thống kê (demo)
+        fetch("http://localhost:5583/api/rental-stats")
+            .then(res => res.json())
+            .then(stats => {
+                const ctx = document.getElementById('rentalChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tổng số lượt thuê', 'Máy đang cho thuê'],
+                        datasets: [{
+                            label: 'Thống kê',
+                            data: [stats.total_rentals, stats.active_rentals],
+                            backgroundColor: ['#156fa3', '#f59e42']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            });
+
+        // Tab navigation logic
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Remove active from all links
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                // Hide all tabs
+                document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+                // Show selected tab
+                const target = this.getAttribute('data-target');
+                if (target) {
+                    document.getElementById(target).classList.add('active');
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                }
+            });
+        });
+        // Show first tab by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.admin-tab').classList.add('active');
+        });
+    </script>
+</body>
+
+</html>

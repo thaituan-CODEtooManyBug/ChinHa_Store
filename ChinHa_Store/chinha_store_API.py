@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Dashboard - Chin Hạ Store</title>
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="index.html" class="logo d-flex align-items-center">
+                <h1>CHIN HẠ STORE</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index.html">Trang Chủ</a></li>
+                    <li><a href="lien-he.html">Liên Hệ</a></li>
+                    <li><a href="admin.html" class="active">Quản Trị</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container mt-5">
+            <h2 class="text-center">Quản Lý Máy Ảnh</h2>
+            <div class="mb-3 text-end">
+                <button id="addCameraBtn" class="btn btn-primary">Thêm Máy Ảnh</button>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Máy</th>
+                        <th>Model</th>
+                        <th>Tình Trạng</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="cameraList">
+                    <!-- Camera data will be populated here -->
+                </tbody>
+            </table>
+
+            <h3 class="mt-5">Thống Kê Thuê</h3>
+            <div id="rentalStats">
+                <!-- Rental statistics will be displayed here -->
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer" class="footer text-center">
+        <div class="container">
+            <p>© <span>Thiết kế bởi PhotoFolio</span> <strong class="px-1 sitename">PhotoFolio</strong> <span>Dựng Web bởi ThaiTuan</span></p>
+        </div>
+    </footer>
+
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

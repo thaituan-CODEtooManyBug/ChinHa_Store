@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Dashboard - Chin Hạ Store</title>
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard">
+
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+                <h1>CHIN HẠ STORE</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="index.html">Trang Chủ</a></li>
+                    <li><a href="lien-he.html">Liên Hệ</a></li>
+                    <li><a href="admin.html" class="active">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 class="text-center my-4">Quản Lý Máy Ảnh</h1>
+
+            <div class="camera-list">
+                <h2>Danh Sách Máy Ảnh</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Máy</th>
+                            <th>Model</th>
+                            <th>Tình Trạng</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cameraTableBody">
+                        <!-- Camera data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="add-camera">
+                <h2>Thêm Máy Ảnh Mới</h2>
+                <form id="addCameraForm">
+                    <div class="mb-3">
+                        <label for="cameraName" class="form-label">Tên Máy</label>
+                        <input type="text" class="form-control" id="cameraName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cameraModel" class="form-label">Model</label>
+                        <input type="text" class="form-control" id="cameraModel" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thêm Máy</button>
+                </form>
+            </div>
+
+            <div class="rental-stats">
+                <h2>Thống Kê Thuê</h2>
+                <div id="rentalStatistics">
+                    <!-- Rental statistics will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="container text-center">
+            <p>© <span>Thiết kế bởi PhotoFolio</span> <strong class="px-1 sitename">PhotoFolio</strong> <span>Dựng Web bởi ThaiTuan</span></p>
+        </div>
+    </footer>
+
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

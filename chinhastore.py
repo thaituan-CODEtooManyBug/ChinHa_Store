@@ -53,36 +53,36 @@
 # print("Database and tables created successfully!")
 
 # # Thêm khách hàng mẫu
-import sqlite3
+# import sqlite3
 
-conn = sqlite3.connect('chinha_store.db')
-cur = conn.cursor()
+# conn = sqlite3.connect('chinha_store.db')
+# cur = conn.cursor()
 
-# Cho thuê theo giờ
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (1, 1, 'hour', '2025-11-10', '07:00', '13:00', '2025-11-10', 'booked', 'Booking slot đầu ngày')''')
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (2, 1, 'hour', '2025-11-10', '15:00', '21:00', '2025-11-10', 'booked', 'Booking slot cuối ngày')''')
+# # Cho thuê theo giờ
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (1, 1, 'hour', '2025-11-10', '07:00', '13:00', '2025-11-10', 'booked', 'Booking slot đầu ngày')''')
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (2, 1, 'hour', '2025-11-10', '15:00', '21:00', '2025-11-10', 'booked', 'Booking slot cuối ngày')''')
 
-# Cho thuê nhiều ngày (lấy trước 20h, trả trước 9h)
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (2, 2, 'date', '2025-11-12', '18:00', '09:00', '2025-11-15', 'booked', 'Thuê nhiều ngày, lấy trước 20h')''')
+# # Cho thuê nhiều ngày (lấy trước 20h, trả trước 9h)
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (2, 2, 'date', '2025-11-12', '18:00', '09:00', '2025-11-15', 'booked', 'Thuê nhiều ngày, lấy trước 20h')''')
 
-# Cho thuê nhiều ngày (lấy sau 20h, trả đúng giờ)
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (3, 2, 'date', '2025-11-16', '21:00', '21:00', '2025-11-19', 'booked', 'Thuê nhiều ngày, lấy sau 20h')''')
+# # Cho thuê nhiều ngày (lấy sau 20h, trả đúng giờ)
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (3, 2, 'date', '2025-11-16', '21:00', '21:00', '2025-11-19', 'booked', 'Thuê nhiều ngày, lấy sau 20h')''')
 
-# Cho thuê giao giờ lẻ, trả trước xh30
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (4, 3, 'date', '2025-11-20', '19:00', '12:00', '2025-11-23', 'booked', 'Trả trước 12h30')''')
+# # Cho thuê giao giờ lẻ, trả trước xh30
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (4, 3, 'date', '2025-11-20', '19:00', '12:00', '2025-11-23', 'booked', 'Trả trước 12h30')''')
 
-# Cho thuê giao giờ lẻ, trả sau xh30
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (5, 3, 'date', '2025-11-24', '19:00', '15:00', '2025-11-27', 'booked', 'Trả sau 14h30')''')
+# # Cho thuê giao giờ lẻ, trả sau xh30
+# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+#     VALUES (5, 3, 'date', '2025-11-24', '19:00', '15:00', '2025-11-27', 'booked', 'Trả sau 14h30')''')
 
-conn.commit()
-conn.close()
-print("Sample data inserted!")
+# conn.commit()
+# conn.close()
+# print("Sample data inserted!")
 
 # import sqlite3
 
@@ -164,3 +164,25 @@ print("Sample data inserted!")
 # conn.commit()
 # conn.close()
 # print("Đã xóa sạch toàn bộ dữ liệu trong bảng rental!")
+import sqlite3
+
+conn = sqlite3.connect('chinha_store.db')
+cur = conn.cursor()
+
+# Thêm khách hàng mẫu cho ID 2, 3, 4, 5
+customers = [
+    (2, "Nguyễn Văn B", "0901234562", "b@gmail.com", "Hà Nội"),
+    (3, "Trần Thị C", "0901234563", "c@gmail.com", "Đà Nẵng"),
+    (4, "Phạm Văn D", "0901234564", "d@gmail.com", "Cần Thơ"),
+    (5, "Lê Thị E", "0901234565", "e@gmail.com", "Hải Phòng"),
+]
+
+for cid, name, phone, email, address in customers:
+    cur.execute("""
+        INSERT OR IGNORE INTO customer (id, name, phone, email, address)
+        VALUES (?, ?, ?, ?, ?)
+    """, (cid, name, phone, email, address))
+
+conn.commit()
+conn.close()
+print("Đã thêm khách hàng mẫu cho ID 2, 3, 4, 5!")
