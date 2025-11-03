@@ -52,11 +52,11 @@
 # conn.close()
 # print("Database and tables created successfully!")
 
-# # Thêm khách hàng mẫu
-# import sqlite3
+# Thêm khách hàng mẫu
+import sqlite3
 
-# conn = sqlite3.connect('chinha_store.db')
-# cur = conn.cursor()
+conn = sqlite3.connect('chinha_store.db')
+cur = conn.cursor()
 
 # # Cho thuê theo giờ
 # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
@@ -76,13 +76,13 @@
 # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
 #     VALUES (4, 3, 'date', '2025-11-20', '19:00', '12:00', '2025-11-23', 'booked', 'Trả trước 12h30')''')
 
-# # Cho thuê giao giờ lẻ, trả sau xh30
-# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (5, 3, 'date', '2025-11-24', '19:00', '15:00', '2025-11-27', 'booked', 'Trả sau 14h30')''')
+# Cho thuê giao giờ lẻ, trả sau xh30
+cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+    VALUES (6, 3, 'date', '2025-11-12', '21:00', '21:00', '2025-11-15', 'booked', '')''')
 
-# conn.commit()
-# conn.close()
-# print("Sample data inserted!")
+conn.commit()
+conn.close()
+print("Sample data inserted!")
 
 # import sqlite3
 
@@ -164,25 +164,25 @@
 # conn.commit()
 # conn.close()
 # print("Đã xóa sạch toàn bộ dữ liệu trong bảng rental!")
-import sqlite3
+# import sqlite3
 
-conn = sqlite3.connect('chinha_store.db')
-cur = conn.cursor()
+# conn = sqlite3.connect('chinha_store.db')
+# cur = conn.cursor()
 
-# Thêm khách hàng mẫu cho ID 2, 3, 4, 5
-customers = [
-    (2, "Nguyễn Văn B", "0901234562", "b@gmail.com", "Hà Nội"),
-    (3, "Trần Thị C", "0901234563", "c@gmail.com", "Đà Nẵng"),
-    (4, "Phạm Văn D", "0901234564", "d@gmail.com", "Cần Thơ"),
-    (5, "Lê Thị E", "0901234565", "e@gmail.com", "Hải Phòng"),
-]
+# # Thêm khách hàng mẫu cho ID 2, 3, 4, 5
+# customers = [
+#     (6, "Nguyễn Văn F", "0904477322", "f@gmail.com", "Hà Nội"),
+#     # (3, "Trần Thị C", "0901234563", "c@gmail.com", "Đà Nẵng"),
+#     # (4, "Phạm Văn D", "0901234564", "d@gmail.com", "Cần Thơ"),
+#     # (5, "Lê Thị E", "0901234565", "e@gmail.com", "Hải Phòng"),
+# ]
 
-for cid, name, phone, email, address in customers:
-    cur.execute("""
-        INSERT OR IGNORE INTO customer (id, name, phone, email, address)
-        VALUES (?, ?, ?, ?, ?)
-    """, (cid, name, phone, email, address))
+# for cid, name, phone, email, address in customers:
+#     cur.execute("""
+#         INSERT OR IGNORE INTO customer (id, name, phone, email, address)
+#         VALUES (?, ?, ?, ?, ?)
+#     """, (cid, name, phone, email, address))
 
-conn.commit()
-conn.close()
-print("Đã thêm khách hàng mẫu cho ID 2, 3, 4, 5!")
+# conn.commit()
+# conn.close()
+# print("Đã thêm khách hàng mẫu cho ID 2, 3, 4, 5!")

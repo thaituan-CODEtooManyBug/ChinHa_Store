@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <tr>
                         <td>${r.customer_name}</td>
                         <td>${r.customer_phone}</td>
+                        <td>${r.camera_name}</td>
                         <td>${r.rental_type === 'date' ? 'Ngày' : 'Giờ'}</td>
                         <td>${r.rental_date || ""}</td>
                         <td>${r.return_date || ""}</td>
@@ -60,6 +61,16 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(() => {
             document.getElementById("statsContent").innerHTML = `<tr><td colspan="7">Không thể tải thống kê.</td></tr>`;
         });
+
+    const cameraColors = [
+        "#4caf50", "#2196f3", "#e91e63", "#ffeb3b",
+        "#9c27b0", "#ff9800", "#795548", "#00bcd4"
+    ];
+
+    function getCameraColor(camId) {
+        const idx = Number(camId) - 1;
+        return cameraColors[(idx >= 0 && idx < cameraColors.length) ? idx : (cameraColors.length - 1)];
+    }
 
     function loadDailyStats(dateStr) {
         const tbody = document.getElementById("dailyStatsContent");

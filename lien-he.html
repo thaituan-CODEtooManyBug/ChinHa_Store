@@ -108,9 +108,18 @@
     <!-- Contact Section -->
     <section id="contact" class="contact section">
       <div class="container" data-aos="fade-up">
-      <div id="calendar"></div>
-      <div id="bookingSections"></div>
+        <!-- Loader + vùng dữ liệu trả về từ backend -->
+        <div id="calendar" class="mb-4"></div>
+        <div id="bookingSections"></div>
+
+        <!-- Chính sách thuê: thông báo ngắn -->
+        <div class="policy-hint text-center mb-3" style="color:#F2A7AD; font-size:0.95rem;">
+          Lưu ý: Khi đặt lịch, bạn đồng ý với
+          <a href="chinh-sach-thue.html" style="color:#52e9f1; text-decoration: underline;">Chính sách thuê</a>
+          của Chin Hạ Store (đặt cọc, giấy tờ hợp lệ, nhận–trả đúng giờ).
+        </div>
       </div>
+
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="info-wrap" data-aos="fade-up" data-aos-delay="200">
@@ -408,7 +417,7 @@
   letter-spacing: 1px;
 }
 #bookingSections {
-  display: none;
+  display: block;
   background: rgba(0,0,0,0.0); /* nền trong suốt */
   border: 2px solid #fff;
   border-radius: 18px;
@@ -428,5 +437,23 @@
     border-radius: 10px;
   }
 }
+.client-loader{
+  min-height: 260px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  border: 2px dashed rgba(242,167,173,0.35);
+  border-radius: 14px; padding: 20px; margin-top: 18px;
+  background: rgba(0,0,0,0.12);
+  text-align:center;
+}
+.client-loader .loader-title{ color:#F2A7AD; font-weight:700; letter-spacing:1px; margin:8px 0 6px }
+.client-loader .loader-quote{ color:#ddd; font-style:italic; margin:2px 0 10px }
+.client-loader .loader-sub, .client-loader .loader-attempt{ color:#aaa; font-size:0.95rem; margin:0 }
+.spinner{
+  width:42px; height:42px; border-radius:50%;
+  border:3px solid rgba(242,167,173,0.25);
+  border-top-color:#F2A7AD; animation: spin .9s linear infinite;
+  margin-bottom:8px;
+}
+@keyframes spin{ to{ transform: rotate(360deg)}}
 </style>
 
