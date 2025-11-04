@@ -1,3 +1,4 @@
+1. Logic thuê
 Giờ mở cửa : 7-23h
 Giờ cho thuê theo khung 6 tiếng : 7-17h
 Điều kiện:
@@ -70,7 +71,42 @@ Trường hợp trả giờ lẻ (vd : 12h15, 14h20, 16h37) :
 | |status|       |VARCHAR|	   |Tình trạng thuê|   |DEFAULT NOW|          |
 | |note|         |TEXT|	       |Ghi chú|	       |DEFAULT NOW|          |
 | |created_at|   |DATETIME|	   |Ngày tạo booking|  |DEFAULT NOW|          |
+| ||   |DATETIME|	   |Ngày tạo booking|  |DEFAULT NOW|          |
 |-------------------------------------------------------------------------|
 
 Customer (1) --------< (N) Rental (N) >-------- (1) Camera
+
+2.Giả định cho tình huống xung đột
+
+-Đối với 3 máy : Canon G7x, Canon R50, DJI Pocket 3 => Không cho thuê theo giờ, chỉ cho thuê theo ngày
+
+
+-Trước khi chốt thuê (
+    -Nếu khách nào chuyển tiền giữ chỗ trước -> Chốt cho id khách đó luôn
+    -Nếu khách nhây nhua, khung thời gian vẫn hiển thị bình thường cho khách khác
+)
+
+-Sau khi chốt thuê(
+    -Xử lý dữ liệu: Thêm thuộc tính "Tình trạng cọc", "Kiểu cọc" vì sẽ có các loại cọc sau:
+    +3 triệu + CCCD
+    +Cọc tài sản + CCCD
+    - Đối với học sinh- sinh viên(*****):
+    +Cọc 1 triệu + 1 CCCD bản thân + 1 CCCD Người thân
+)
+"Tình trạng thanh toán" =["true","false"]
+"Tình trạng cọc" =["3TRCCCD","TSCCCD","HSSV"]
+
+Bạn Nhi, muốn thuê một canon G7x ngày 12/11/2025 thuê 3 ngày. Bạn Nhi nhắn tin hỏi Hi Chin về thời gian trống. Chin kêu còn giờ trống
+Bây giờ là ngày 10/11, bạn Nhi đến kiểm tra máy, bản ưng, bản muốn thuê
+->Chin kêu bạn đó chuyển khoản để giữ lịch, thanh toán trước xx% tổng giá trị thuê
+
+|->Bạn Nhi vui vẻ đồng ý và đã chuyển => Cập nhật "Tình trạng thanh toán" = true -> Chốt lịch
+|->Sau khi chốt lịch, Bạn Chin hỏi bạn Nhi là bạn muốn cọc theo diện nào? |->Diện 3tr + CCCD
+|                                                                         |->Diện Tài Sản  + CCCD
+|                                                                         |->Diện (*****)
+|->Sau khi chọn 1 trong 3 diện cọc -> Cập nhật "Tình trạng cọc" = true Kiểu cọc = "3TRCCCD" ->
+
+|->Bạn Nhi lè nhà lè nhè, trì hoãn việc chuyển tiền liên tục trong khoảng ngày 10 đến ngày thuê là ngày 12
+|Case 1->Nếu có người khác trong khoảng thời gian này cũng muốn thuê máy này mà chuyển tiền trước bạn Nhi -> Chốt cho khách đó
+|Case 2->
 

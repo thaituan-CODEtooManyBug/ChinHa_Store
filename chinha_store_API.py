@@ -24,7 +24,7 @@ def get_db_connection():
 @app.get("/api/bookings")
 def bookings_by_date(date: str = Query(...)):
     conn = get_db_connection()
-    cameras = conn.execute("SELECT id, name, model FROM camera").fetchall()
+    cameras = conn.execute("SELECT id, name, model, rent_time_frame FROM camera").fetchall()
     bookings = conn.execute("""
         SELECT camera_id, start_time, end_time, rental_type, rental_date, return_date
         FROM rental
@@ -61,6 +61,7 @@ def bookings_by_date(date: str = Query(...)):
             "camera_id": cam["id"],
             "camera_name": cam["name"],
             "model": cam["model"],
+            "rent_time_frame": cam["rent_time_frame"],
             "booked_slots": booking_dict.get(cam["id"], [])
         })
     return JSONResponse(result)
@@ -68,7 +69,7 @@ def bookings_by_date(date: str = Query(...)):
 @app.get("/api/cameras")
 def get_cameras():
     conn = get_db_connection()
-    cameras = conn.execute("SELECT id, name, model, status FROM camera").fetchall()
+    cameras = conn.execute("SELECT id, name, model, status, rent_time_frame FROM camera").fetchall()
     conn.close()
     result = []
     for cam in cameras:
@@ -76,7 +77,8 @@ def get_cameras():
             "id": cam["id"],
             "name": cam["name"],
             "model": cam["model"],
-            "status": cam["status"]
+            "status": cam["status"],
+            "rent_time_frame": cam["rent_time_frame"]
         })
     return JSONResponse(result)
 
@@ -94,6 +96,15 @@ def get_rental_stats():
 @app.get("/api/rentals-detail")
 def get_rentals_detail(date: str = Query(None), month: str = Query(None)):
     conn = get_db_connection()
+    if month:
+        # Nếu month là dạng '2025-11,2025-12', chỉ lấy tháng đầu tiên
+        if ',' in month:
+            month = month.split(',')[0]
+        year, mon = map(int, month.split('-'))  # <-- Đưa ra ngoài if
+        last_day = calendar.monthrange(year, mon)[1]
+        start = f"{month}-01"
+        end = f"{month}-{last_day:02d}"
+    # ...phần còn lại...
     # 1. Trả về danh sách booking chi tiết cho table
     sql = """
         SELECT

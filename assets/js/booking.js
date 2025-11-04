@@ -7,6 +7,24 @@ for (let h = 7; h <= 17; h++) {
 }
 const buffer = 1; // 1 tiếng buffer
 
+async function fetchAllBookings(dateStart, dateEnd) {
+  const API_BASE = "http://127.0.0.1:5583";
+  // Lấy cả tháng bắt đầu và tháng kết thúc (nếu khác tháng)
+  const months = [];
+  let d = new Date(dateStart.slice(0, 7) + "-01");
+  const endMonth = dateEnd.slice(0, 7);
+  while (d.toISOString().slice(0, 7) <= endMonth) {
+    months.push(d.toISOString().slice(0, 7));
+    d.setMonth(d.getMonth() + 1);
+  }
+  let all = [];
+  for (const m of months) {
+    const res = await fetch(`${API_BASE}/api/rentals-detail?month=${m}`);
+    const data = await res.json();
+    all = all.concat(data.rentals || []);
+  }
+  return all;
+}
 // Kiểm tra conflict với buffer
 function isConflictWithBuffer(slot, booked) {
   // Nếu là object start (ngày bắt đầu của booking nhiều ngày)
@@ -62,13 +80,68 @@ function isSlotBlocked(slot, booked_slots) {
 async function getBookingsByDate(dateStr) {
   const res = await fetch(`http://127.0.0.1:5583/api/bookings?date=${dateStr}`);
   const data = await res.json();
-  // Đưa về dạng [{camera, slots: [...] }]
+  // Đưa về dạng [{camera, slots: [...], rent_time_frame }]
   return data.map(cam => ({
     camera: cam.camera_name,
-    slots: cam.booked_slots
+    slots: cam.booked_slots,
+    rent_time_frame: cam.rent_time_frame
   }));
 }
 
+async function showDaySection(date) {
+  const container = document.getElementById("bookingDaySections");
+  const dMY = date.split('-').reverse().join('/');
+  let bookings = [];
+  try {
+    bookings = await getBookingsByDate(date);
+  } catch (e) {
+    container.innerHTML = "<div style='color:#d11313'>Không thể tải dữ liệu thuê ngày.</div>";
+    return;
+  }
+
+  // Lọc chỉ lấy máy cho thuê theo ngày hoặc cả ngày/giờ
+  const dateBookings = bookings.filter(b =>
+    b.rent_time_frame === "date" || b.rent_time_frame === "date/hour"
+  );
+
+  let html = `<h4 style="color:#F2A7AD;text-align:center;">Thuê theo ngày</h4>`;
+  if (!dateBookings.length) {
+    html += `<div style="color:#aaa;text-align:center;">Không có máy nào cho thuê theo ngày.</div>`;
+  } else {
+    html += dateBookings.map((b, idx) => {
+      const camera = b.camera;
+      const slots = Array.isArray(b.slots) ? b.slots : [];
+      let slotHtml = '';
+      if (slots.length === 1 && slots[0] === 'ALL_DAY') {
+        slotHtml = `<div class="slot booked"><span style="color:#d11313;">🔴 Đã kín lịch cho thuê ngày này</span></div>`;
+      } else {
+        slotHtml = `
+          <div class="slot available" style="color:#90ee90;">
+            🟢 Máy này chỉ cho thuê theo ngày.<br>
+            <b>Chính sách trả máy:</b>
+            <ul style="color:#fff; text-align:left; margin: 8px 0 0 18px; font-size:0.98em;">
+              <li>Nếu lấy máy trước 20h: phải trả trước 9h ngày kết thúc thuê.</li>
+              <li>Nếu lấy máy sau 20h: trả đúng giờ lấy vào ngày kết thúc thuê.</li>
+              <li>Trả giờ lẻ: trước xh30 tính x, sau xh30 tính x+1.</li>
+            </ul>
+            <button class="book-btn" type="button">Đặt thuê theo ngày</button>
+          </div>
+        `;
+      }
+      return `
+        <div class="camera-card">
+          <div class="camera-header">
+            <span class="camera-title">${camera}</span>
+          </div>
+          <div class="camera-slots">
+            ${slotHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  container.innerHTML = html;
+}
 // Hiển thị modal: danh sách máy, slot đã thuê và slot còn trống
 async function showDayDetail(date) {
   const container = document.getElementById("bookingSections");
@@ -88,12 +161,84 @@ async function showDayDetail(date) {
     console.error(e);
     return;
   }
+  async function getBookingsByDate(dateStr) {
+    const res = await fetch(`http://127.0.0.1:5583/api/bookings?date=${dateStr}`);
+    const data = await res.json();
+    // Đưa về dạng [{camera, slots: [...], rent_time_frame }]
+    return data.map(cam => ({
+      camera: cam.camera_name,
+      slots: cam.booked_slots,
+      rent_time_frame: cam.rent_time_frame || "date/hour"
+    }));
+  }
+  const hourBookings = bookings.filter(b =>
+  b.rent_time_frame === "hour" || b.rent_time_frame === "date/hour"
+  );
 
+//   async function showDaySection(date) {
+//   const container = document.getElementById("bookingDaySections");
+//   const dMY = date.split('-').reverse().join('/');
+//   let bookings = [];
+//   try {
+//     bookings = await getBookingsByDate(date);
+//   } catch (e) {
+//     container.innerHTML = "<div style='color:#d11313'>Không thể tải dữ liệu thuê ngày.</div>";
+//     return;
+//   }
+
+//   // Lọc chỉ lấy máy cho thuê theo ngày hoặc cả ngày/giờ
+//   const dateBookings = bookings.filter(b =>
+//     b.rent_time_frame === "date" || b.rent_time_frame === "date/hour"
+//   );
+
+//   let html = `<h4 style="color:#F2A7AD;text-align:center;">Thuê theo ngày</h4>`;
+//   if (!dateBookings.length) {
+//     html += `<div style="color:#aaa;text-align:center;">Không có máy nào cho thuê theo ngày.</div>`;
+//   } else {
+//     html += dateBookings.map((b, idx) => {
+//       const camera = b.camera;
+//       const slots = Array.isArray(b.slots) ? b.slots : [];
+//       let slotHtml = '';
+//       if (slots.length === 1 && slots[0] === 'ALL_DAY') {
+//         slotHtml = `<div class="slot booked"><span style="color:#d11313;">🔴 Đã kín lịch cho thuê ngày này</span></div>`;
+//       } else {
+//         slotHtml = `
+//           <div class="slot available" style="color:#90ee90;">
+//             🟢 Máy này chỉ cho thuê theo ngày.<br>
+//             <b>Chính sách trả máy:</b>
+//             <ul style="color:#fff; text-align:left; margin: 8px 0 0 18px; font-size:0.98em;">
+//               <li>Nếu lấy máy trước 20h: phải trả trước 9h ngày kết thúc thuê.</li>
+//               <li>Nếu lấy máy sau 20h: trả đúng giờ lấy vào ngày kết thúc thuê.</li>
+//               <li>Trả giờ lẻ: trước xh30 tính x, sau xh30 tính x+1.</li>
+//             </ul>
+//             <button class="book-btn" type="button">Đặt thuê theo ngày</button>
+//           </div>
+//         `;
+//       }
+//       return `
+//         <div class="camera-card">
+//           <div class="camera-header">
+//             <span class="camera-title">${camera}</span>
+//           </div>
+//           <div class="camera-slots">
+//             ${slotHtml}
+//           </div>
+//         </div>
+//       `;
+//     }).join('');
+//   }
+//   container.innerHTML = html;
+// }
   // Nếu đã có click mới hơn, bỏ qua render của lần cũ
   if (myToken !== window.__bookingClickToken) return;
 
   let html = '';
-  bookings.forEach((b, idx) => {
+  bookings
+  .filter(b => {
+    const t = String(b.rent_time_frame).toLowerCase().trim();
+    return t === "hour" || t === "date/hour";
+  })
+  .forEach((b, idx) => {
     const camera = b.camera;
     const slots = Array.isArray(b.slots) ? b.slots : [];
     let slotHtml = '';
@@ -171,6 +316,25 @@ document.querySelectorAll('.accordion-toggle').forEach(header => {
       arrow.innerHTML = "&#9650;";
     }
   };
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const calendarEl = document.getElementById("calendar");
+  if (!calendarEl) return;
+
+  let calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    locale: "vi",
+    height: "auto",
+    selectable: true,
+    eventTimeFormat: false,
+    eventDisplay: 'block',
+    headerToolbar: { left: "prev,next today", center: "title", right: "" },
+    dateClick: function (info) {
+      showDaySection(info.dateStr);   // thuê theo ngày
+      showDayDetail(info.dateStr);    // thuê theo giờ
+    }
+  });
+  calendar.render();
 });
 
 
@@ -357,7 +521,9 @@ document.querySelectorAll('.accordion-toggle').forEach(header => {
         border: 2px dashed rgba(242,167,173,0.35); border-radius: 14px;
         background: rgba(0,0,0,0.6); padding: 24px 16px; text-align: center;
       }
-      .copilot-inner{ max-width: 560px; width: 100%; }
+      .copilot-inner{
+        max-width: 560px; width: 100%;
+      }
       .copilot-title{
         color:#F2A7AD;font-weight:700;letter-spacing:0.5px;margin:8px 0 6px;font-size:18px;
       }
@@ -494,3 +660,287 @@ document.querySelectorAll('.accordion-toggle').forEach(header => {
   };
 })();
 /* ===== End loader ===== */
+
+
+async function checkAvailableCamerasByDate(dateStart, dateEnd, hourStart, hourEnd) {
+  // Gọi API lấy tất cả booking trong khoảng ngày nhận - ngày trả
+  const res = await fetch(`/api/rentals-detail?date=${dateStart.slice(0,7)}`);
+  const data = await res.json();
+  const bookings = data.rentals;
+
+  // Lọc danh sách máy cho thuê theo ngày hoặc cả ngày/giờ
+  // (Bạn có thể lấy danh sách máy từ API /api/cameras nếu cần)
+  // Giả sử bạn đã có mảng allCameras với trường rent_time_frame
+
+  // Lọc các máy khả dụng
+  const availableCameras = allCameras.filter(cam => {
+    // Chỉ kiểm tra máy cho thuê theo ngày hoặc cả ngày/giờ
+    if (cam.rent_time_frame !== "date" && cam.rent_time_frame !== "date/hour") return false;
+    const camBookings = allBookings.filter(b => b.camera === cam.id);
+    // Nếu không có booking nào, luôn khả dụng!
+    if (!camBookings.length) return true;
+    // Nếu có booking, kiểm tra từng booking như cũ
+    for (const b of camBookings) {
+      // Nếu lịch này giao với khoảng khách muốn thuê
+      if (
+        !(dateEnd < b.rental_date || dateStart > b.return_date) // giao nhau về ngày
+      ) {
+        // Nếu là rental_type = 'date', kiểm tra giờ nhận/trả nếu là ngày đầu/cuối
+        // Nếu là rental_type = 'hour', kiểm tra slot giờ giao nhau
+        return false; // bị cấn lịch
+      }
+    }
+    return true; // không bị cấn lịch nào
+  });
+
+  // Hiển thị kết quả
+  // ...
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // --- Xử lý cho thuê theo ngày ---
+  const dateStartInput = document.getElementById('dateStart');
+  const dateEndInput = document.getElementById('dateEnd');
+  const hourStartInput = document.getElementById('hourStart');
+  const hourEndInput = document.getElementById('hourEnd');
+  const checkBtn = document.getElementById('checkDateBtn');
+  const resultDiv = document.getElementById('rentByDateResult');
+
+  // Tự động sinh giờ trả theo chính sách
+  function autoSetHourEnd() {
+    const hourStart = hourStartInput.value;
+    if (!hourStart) return;
+    const h = parseInt(hourStart.split(':')[0], 10);
+    if (h < 20) {
+      hourEndInput.value = "09:00";
+    } else {
+      hourEndInput.value = hourStart;
+    }
+  }
+  hourStartInput.addEventListener('change', autoSetHourEnd);
+  dateStartInput.addEventListener('change', autoSetHourEnd);
+
+  // Lấy danh sách máy từ API (có rent_time_frame)
+
+  async function fetchAllCameras() {
+    const API_BASE = "http://127.0.0.1:5583";
+    const res = await fetch(`${API_BASE}/api/cameras`);
+    return await res.json();
+  }
+  // Kiểm tra máy có bị cấn lịch không
+  function isCameraAvailable(cam, bookings, dateStart, dateEnd, hourStart, hourEnd) {
+    if (cam.rent_time_frame !== "date" && cam.rent_time_frame !== "date/hour") return false;
+    const camBookings = bookings.filter(b => b.camera_id == cam.id);
+    if (!camBookings.length) return true;
+    // Chuyển về dạng Date để so sánh
+    const dStart = new Date(dateStart);
+    const dEnd = new Date(dateEnd);
+
+    for (const b of camBookings) {
+      const bStart = new Date(b.rental_date);
+      const bEnd = new Date(b.return_date);
+
+      // Nếu không giao ngày thì bỏ qua
+      if (dEnd < bStart || dStart > bEnd) continue;
+
+      // Nếu nằm trọn trong khoảng booking cũ => cấn
+      if (dStart > bStart && dEnd < bEnd) return false;
+
+      // Nếu là thuê ngày
+      if (b.rental_type === 'date') {
+        // Ngày nhận trùng ngày nhận booking cũ
+        if (dateStart === b.rental_date) {
+          // Nếu giờ nhận < giờ trả của booking cũ => cấn
+          if (hourStart < b.end_time) return false;
+        }
+        // Ngày trả trùng ngày trả booking cũ
+        if (dateEnd === b.return_date) {
+          // Nếu giờ trả > giờ nhận của booking cũ => cấn
+          if (hourEnd > b.start_time) return false;
+        }
+        // Nếu ngày nhận nằm sau ngày nhận booking cũ và ngày trả nằm trước ngày trả booking cũ => cấn
+        if (
+          (dStart > bStart && dStart < bEnd) ||
+          (dEnd > bStart && dEnd < bEnd)
+        ) {
+          return false;
+        }
+        // Nếu booking cũ nằm trọn trong khoảng khách muốn thuê => cấn
+        if (bStart > dStart && bEnd < dEnd) return false;
+      } else {
+        // Nếu là thuê theo giờ, kiểm tra từng ngày giao nhau
+        // Kiểm tra ngày nhận
+        if (dateStart === b.rental_date) {
+          if (!(hourEnd <= b.start_time || hourStart >= b.end_time)) return false;
+        }
+        // Kiểm tra ngày trả
+        if (dateEnd === b.rental_date) {
+          if (!(hourEnd <= b.start_time || hourStart >= b.end_time)) return false;
+        }
+        // Nếu ngày ở giữa, luôn bị cấn
+        if (
+          (dStart < bStart && dEnd > bEnd) ||
+          (bStart < dStart && bEnd > dEnd)
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // Khi bấm kiểm tra máy khả dụng
+  checkBtn.onclick = async function () {
+    const dateStart = dateStartInput.value;
+    const dateEnd = dateEndInput.value;
+    const hourStart = hourStartInput.value;
+    const hourEnd = hourEndInput.value;
+    if (!dateStart || !dateEnd || !hourStart || !hourEnd) {
+      resultDiv.innerHTML = "<div style='color:#d11313'>Vui lòng nhập đủ thông tin!</div>";
+      return;
+    }
+    resultDiv.innerHTML = "";
+
+    try {
+      const [allCameras, allBookings] = await Promise.all([
+        fetchAllCameras(),
+        fetchAllBookingsByDateRange(dateStart, dateEnd)
+      ]);
+      // Lọc máy khả dụng 
+      console.log("All cameras:", allCameras.map(c => c.id));
+      const available = allCameras.map(cam => {
+      const check = isCameraAvailableForDate(cam, allBookings, dateStart, dateEnd, hourStart, hourEnd);
+      return { cam, ...check };
+      }).filter(item => item.available || (item.availableFrom && item.availableFrom > hourStart));
+      console.log("Available:", available.map(a => a.cam.id));
+
+      // Luôn cập nhật lại resultDiv, không để loading mãi
+      if (!available.length) {
+        resultDiv.innerHTML = "<div style='color:#d11313'>Không có máy nào khả dụng cho thời gian này.</div>";
+      } else {
+    resultDiv.innerHTML = available.map(item => {
+      if (item.available) {
+        return `<div class="camera-card">
+          <div class="camera-header"><span class="camera-title">${item.cam.name || item.cam.camera_name}</span></div>
+          <div class="camera-slots"><span style="color:#90ee90;">🟢 Khả dụng</span></div>
+        </div>`;
+      } else if (item.availableFrom) {
+        return `<div class="camera-card">
+          <div class="camera-header"><span class="camera-title">${item.cam.name || item.cam.camera_name}</span></div>
+          <div class="camera-slots"><span style="color:#90ee90;">🟢 Khả dụng từ ${item.availableFrom}</span></div>
+        </div>`;
+      }
+      return "";
+    }).join('');
+      }
+    } catch (e) {
+      console.error(e);
+      resultDiv.innerHTML = "<div style='color:#d11313'>Lỗi khi kiểm tra máy khả dụng.</div>";
+    }
+  };
+});
+
+async function fetchAllBookings(dateStart, dateEnd) {
+  const API_BASE = "http://127.0.0.1:5583";
+  // Lấy cả tháng bắt đầu và tháng kết thúc (nếu khác tháng)
+  const months = [];
+  let d = new Date(dateStart.slice(0, 7) + "-01");
+  const endMonth = dateEnd.slice(0, 7);
+  while (d.toISOString().slice(0, 7) <= endMonth) {
+    months.push(d.toISOString().slice(0, 7));
+    d.setMonth(d.getMonth() + 1);
+  }
+  let all = [];
+  for (const m of months) {
+    const res = await fetch(`${API_BASE}/api/rentals-detail?month=${m}`);
+    const data = await res.json();
+    all = all.concat(data.rentals || []);
+  }
+  return all;
+}
+
+async function fetchAllBookingsByDateRange(dateStart, dateEnd) {
+  const API_BASE = "http://127.0.0.1:5583";
+  const days = [];
+  let d = new Date(dateStart);
+  const dEnd = new Date(dateEnd);
+  while (d <= dEnd) {
+    days.push(d.toISOString().slice(0, 10));
+    d.setDate(d.getDate() + 1);
+  }
+  // Gọi song song tất cả ngày
+  const all = await Promise.all(
+    days.map(day =>
+      fetch(`${API_BASE}/api/rentals-detail?date=${day}`)
+        .then(res => res.json())
+        .then(data => data.rentals || [])
+    )
+  );
+  // Gộp tất cả bookings lại (có thể trùng, bạn có thể lọc unique nếu cần)
+  return all.flat();
+}
+
+function getMaxEndTimeOnDate(bookings, date, cameraId) {
+  // Trả về giờ kết thúc lớn nhất của các booking theo giờ trong ngày
+  let maxEnd = "00:00";
+  bookings.forEach(b => {
+    if (b.camera_id == cameraId && b.rental_type === "hour" && b.rental_date === date) {
+      if (b.end_time > maxEnd) maxEnd = b.end_time;
+    }
+  });
+  return maxEnd;
+}
+
+function isCameraAvailableForDate(cam, bookings, dateStart, dateEnd, hourStart, hourEnd) {
+  if (cam.rent_time_frame !== "date" && cam.rent_time_frame !== "date/hour") return false;
+  const camBookings = bookings.filter(b => b.camera_id == cam.id);
+
+  // 1. Kiểm tra toàn bộ khoảng ngày/giờ không bị cấn lịch nào
+  const dStart = new Date(dateStart + "T" + hourStart);
+  const dEnd = new Date(dateEnd + "T" + hourEnd);
+
+  for (const b of camBookings) {
+    // Nếu booking là theo ngày
+    if (b.rental_type === "date") {
+      const bStart = new Date(b.rental_date + "T" + (b.start_time || "00:00"));
+      const bEnd = new Date(b.return_date + "T" + (b.end_time || "23:59"));
+      // Nếu giao nhau
+      if (!(dEnd <= bStart || dStart >= bEnd)) return { available: false };
+    }
+    // Nếu booking là theo giờ
+    if (b.rental_type === "hour") {
+      const bDate = b.rental_date;
+      const bStart = new Date(bDate + "T" + b.start_time);
+      const bEnd = new Date(bDate + "T" + b.end_time);
+      // Nếu giao nhau
+      if (!(dEnd <= bStart || dStart >= bEnd)) return { available: false };
+    }
+  }
+
+  // 2. Kiểm tra ngày nhận: nếu có booking theo giờ, chỉ khả dụng từ sau giờ kết thúc cuối cùng
+  let maxEnd = getMaxEndTimeOnDate(camBookings, dateStart, cam.id);
+  if (hourStart < maxEnd) {
+    // Nếu maxEnd < hourEnd (giờ trả), thì chỉ khả dụng từ maxEnd trở đi
+    // Nhưng phải kiểm tra lại từ maxEnd đến hourEnd có bị cấn lịch không
+    const newStart = maxEnd;
+    const newDStart = new Date(dateStart + "T" + newStart);
+    for (const b of camBookings) {
+      if (b.rental_type === "date") {
+        const bStart = new Date(b.rental_date + "T" + (b.start_time || "00:00"));
+        const bEnd = new Date(b.return_date + "T" + (b.end_time || "23:59"));
+        if (!(dEnd <= bStart || newDStart >= bEnd)) return { available: false };
+      }
+      if (b.rental_type === "hour") {
+        const bDate = b.rental_date;
+        const bStart = new Date(bDate + "T" + b.start_time);
+        const bEnd = new Date(bDate + "T" + b.end_time);
+        if (!(dEnd <= bStart || newDStart >= bEnd)) return { available: false };
+      }
+    }
+    return { available: false, availableFrom: maxEnd };
+  }
+
+  return { available: true };
+}
+
+

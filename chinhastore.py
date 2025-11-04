@@ -53,36 +53,36 @@
 # print("Database and tables created successfully!")
 
 # Thêm khách hàng mẫu
-import sqlite3
+# import sqlite3
 
-conn = sqlite3.connect('chinha_store.db')
-cur = conn.cursor()
+# conn = sqlite3.connect('chinha_store.db')
+# cur = conn.cursor()
 
-# # Cho thuê theo giờ
+# # # Cho thuê theo giờ
+# # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+# #     VALUES (1, 1, 'hour', '2025-11-10', '07:00', '13:00', '2025-11-10', 'booked', 'Booking slot đầu ngày')''')
+# # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+# #     VALUES (2, 1, 'hour', '2025-11-10', '15:00', '21:00', '2025-11-10', 'booked', 'Booking slot cuối ngày')''')
+
+# # # Cho thuê nhiều ngày (lấy trước 20h, trả trước 9h)
+# # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+# #     VALUES (2, 2, 'date', '2025-11-12', '18:00', '09:00', '2025-11-15', 'booked', 'Thuê nhiều ngày, lấy trước 20h')''')
+
+# # # Cho thuê nhiều ngày (lấy sau 20h, trả đúng giờ)
+# # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+# #     VALUES (3, 2, 'date', '2025-11-16', '21:00', '21:00', '2025-11-19', 'booked', 'Thuê nhiều ngày, lấy sau 20h')''')
+
+# # # Cho thuê giao giờ lẻ, trả trước xh30
+# # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
+# #     VALUES (4, 3, 'date', '2025-11-20', '19:00', '12:00', '2025-11-23', 'booked', 'Trả trước 12h30')''')
+
+# # Cho thuê giao giờ lẻ, trả sau xh30
 # cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (1, 1, 'hour', '2025-11-10', '07:00', '13:00', '2025-11-10', 'booked', 'Booking slot đầu ngày')''')
-# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (2, 1, 'hour', '2025-11-10', '15:00', '21:00', '2025-11-10', 'booked', 'Booking slot cuối ngày')''')
+#     VALUES (6, 3, 'date', '2025-11-12', '21:00', '21:00', '2025-11-15', 'booked', '')''')
 
-# # Cho thuê nhiều ngày (lấy trước 20h, trả trước 9h)
-# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (2, 2, 'date', '2025-11-12', '18:00', '09:00', '2025-11-15', 'booked', 'Thuê nhiều ngày, lấy trước 20h')''')
-
-# # Cho thuê nhiều ngày (lấy sau 20h, trả đúng giờ)
-# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (3, 2, 'date', '2025-11-16', '21:00', '21:00', '2025-11-19', 'booked', 'Thuê nhiều ngày, lấy sau 20h')''')
-
-# # Cho thuê giao giờ lẻ, trả trước xh30
-# cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-#     VALUES (4, 3, 'date', '2025-11-20', '19:00', '12:00', '2025-11-23', 'booked', 'Trả trước 12h30')''')
-
-# Cho thuê giao giờ lẻ, trả sau xh30
-cur.execute('''INSERT INTO rental (customer_id, camera_id, rental_type, rental_date, start_time, end_time, return_date, status, note)
-    VALUES (6, 3, 'date', '2025-11-12', '21:00', '21:00', '2025-11-15', 'booked', '')''')
-
-conn.commit()
-conn.close()
-print("Sample data inserted!")
+# conn.commit()
+# conn.close()
+# print("Sample data inserted!")
 
 # import sqlite3
 
@@ -103,28 +103,18 @@ print("Sample data inserted!")
 
 # conn.close()
 
-#--------------Lệnh updtae-------------
-# import sqlite3
+# --------------Lệnh updtae-------------
+import sqlite3
 
-# cameras = [
-#     (1, "2025-11-02 08:25:29"),
-#     (2, "2025-11-02 08:25:29"),
-#     (3, "2025-11-02 08:25:29"),
-#     (4, "2025-11-02 08:25:29"),
-#     (5, "2025-11-02 08:25:29"),
-#     (6, "2025-11-02 08:25:29"),
-#     (7, "2025-11-02 08:25:29"),
-# ]
+conn = sqlite3.connect('chinha_store.db')
+cur = conn.cursor()
 
-# conn = sqlite3.connect('chinha_store.db')
-# cur = conn.cursor()
-# for cam_id, created_at in cameras:
-#     cur.execute("""
-#         UPDATE camera SET created_at = ? WHERE id = ?
-#     """, (created_at, cam_id))
-# conn.commit()
-# conn.close()
-# print("Cameras updated!")
+cur.execute("""
+    DELETE FROM camera WHERE camera.id = ?
+""", (4,))
+conn.commit()
+conn.close()
+print("updated!")
 # import sqlite3
 
 # conn = sqlite3.connect('chinha_store.db')

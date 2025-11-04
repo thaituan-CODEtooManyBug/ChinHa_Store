@@ -105,6 +105,39 @@
 
 
   <main class="main">
+    <section class="rentByDate">
+      <!-- ...existing code... -->
+<div id="bookingByDateSection" class="mb-4" style="background:#000;border:2px solid #fff;border-radius:18px;max-width:900px;margin:30px auto 0 auto;padding:24px 10px 30px 10px;">
+  <h4 style="color:#F2A7AD;text-align:center;margin-bottom:18px;">Cho thuê theo ngày</h4>
+  <div class="policy-hint text-center mb-3" style="color:#aaa;">
+    <b>Hướng dẫn:</b> Chọn ngày nhận, ngày trả và giờ nhận (giờ trả sẽ tự động sinh theo chính sách). Sau đó chọn máy để kiểm tra khả dụng.
+  </div>
+  <form id="rentByDateForm" class="row g-3 justify-content-center align-items-end mb-4">
+    <div class="col-auto">
+      <label for="dateStart" class="form-label">Ngày nhận</label>
+      <input type="date" id="dateStart" class="form-control" required>
+    </div>
+    <div class="col-auto">
+      <label for="dateEnd" class="form-label">Ngày trả</label>
+      <input type="date" id="dateEnd" class="form-control" required>
+    </div>
+    <div class="col-auto">
+      <label for="hourStart" class="form-label">Giờ nhận</label>
+      <input type="time" id="hourStart" class="form-control" required>
+    </div>
+    <div class="col-auto">
+      <label for="hourEnd" class="form-label">Giờ trả</label>
+      <input type="time" id="hourEnd" class="form-control" readonly>
+    </div>
+    <div class="col-auto">
+      <button type="button" id="checkDateBtn" class="btn btn-primary">Kiểm tra máy khả dụng</button>
+    </div>
+  </form>
+  <div id="rentByDateResult"></div>
+</div>
+<!-- ...giữ nguyên các section khác... -->
+<!-- ...existing code... -->
+    </section>
     <!-- Contact Section -->
     <section id="contact" class="contact section">
       <div class="container" data-aos="fade-up">
