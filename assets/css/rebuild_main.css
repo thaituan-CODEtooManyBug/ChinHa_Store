@@ -1,0 +1,448 @@
+:root {
+--default-color: #3e3e3e;
+--background-color: #ffffff;
+--heading-color: #222;
+--nav-color: #3e3e3e;
+--nav-hover-color: #1976d2;
+--nav-font: "Quicksand", sans-serif;
+--nav-dropdown-background-color: #3e3e3e;
+--nav-dropdown-color: #f7f7f7;
+--nav-dropdown-hover-color: #1976d2;
+--accent-color: #F2A7AD;
+--contrast-color: #fff;
+--nav-mobile-background-color: #aca9a9; / Thêm dòng này */
+}
+
+body {
+      background: #fff;
+      font-family: "Quicksand", sans-serif;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    /* Heading & text */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Quicksand", sans-serif;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      color: #222;
+    }
+    h1 { font-size: 2.4em; }
+    h2 { font-size: 2em; }
+    h3 { font-size: 1.6em; }
+    h4 { font-size: 1.3em; }
+    h5 { font-size: 1.1em; }
+    h6 { font-size: 1em; }
+    p {
+      font-family: "Quicksand", sans-serif;
+      font-size: 1em;
+      color: #444;
+      margin: 0 0 16px 0;
+      line-height: 1.7;
+    }
+/*--------------------------------------------------------------
+# Global Header
+--------------------------------------------------------------*/
+.header {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  padding: 20px 0;
+  transition: all 0.5s;
+  z-index: 997;
+  border-bottom: 1px solid var(--background-color);
+}
+
+.header .logo {
+  line-height: 1;
+}
+
+.header .logo img {
+  max-height: 36px;
+  margin-right: 8px;
+}
+
+.header .logo h1 {
+  font-size: 32px;
+  margin: 0;
+  font-weight: 400;
+  color: var(--heading-color);
+}
+
+.header .logo i {
+  font-size: 28px;
+  margin-right: 6px;
+}
+
+.header .header-social-links {
+  padding-right: 15px;
+}
+
+.header .header-social-links a {
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  padding-left: 6px;
+  display: inline-block;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.header .header-social-links a:hover {
+  color: var(--accent-color);
+}
+
+.header .header-social-links a i {
+  line-height: 0px;
+}
+/*--------------------------------------------------------------
+# Navigation Menu
+--------------------------------------------------------------*/
+/* Navmenu - Desktop */
+@media (min-width: 800px) {
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 60px;
+    padding: 0 16px;
+    background: var(--background-color);
+  }
+  .nav-title-mobile {
+    display: none;
+  }
+  .navmenu {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    /* giữ logo trái, menu chiếm phần còn lại */
+  }
+  .navmenu img {
+    margin-right: 24px; /* cách logo với menu, tuỳ chỉnh */
+  }
+  .navmenu ul {
+    flex: 1; /* chiếm hết phần còn lại */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    justify-content: center; /* căn giữa các mục */
+    gap: 32px; /* hoặc giảm số này nếu muốn sát hơn */
+  }
+
+  .navmenu li {
+    position: relative;
+  }
+
+  .navmenu a,
+  .navmenu a:focus {
+    color: var(--nav-color);
+    padding: 18px 15px;
+    font-size: 14px;
+    font-family: var(--nav-font);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .navmenu a i,
+  .navmenu a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+    transition: 0.3s;
+  }
+
+  .navmenu li:last-child a {
+    padding-right: 0;
+  }
+
+  .navmenu li:hover>a,
+  .navmenu .active,
+  .navmenu .active:focus {
+    color: var(--nav-hover-color);
+  }
+
+  .navmenu .dropdown ul {
+    margin: 0;
+    padding: 10px 0;
+    background: var(--nav-dropdown-background-color);
+    display: block;
+    position: absolute;
+    visibility: hidden;
+    left: 14px;
+    top: 130%;
+    opacity: 0;
+    transition: 0.3s;
+    border-radius: 4px;
+    z-index: 99;
+  }
+
+  .navmenu .dropdown ul li {
+    min-width: 200px;
+  }
+
+  .navmenu .dropdown ul a {
+    padding: 10px 20px;
+    font-size: 15px;
+    text-transform: none;
+    color: var(--nav-dropdown-color);
+  }
+
+  .navmenu .dropdown ul a i {
+    font-size: 12px;
+  }
+
+  .navmenu .dropdown ul a:hover,
+  .navmenu .dropdown ul .active:hover,
+  .navmenu .dropdown ul li:hover>a {
+    color: var(--nav-dropdown-hover-color);
+  }
+
+  .navmenu .dropdown:hover>ul {
+    opacity: 1;
+    top: 100%;
+    visibility: visible;
+  }
+
+  .navmenu .dropdown .dropdown ul {
+    top: 0;
+    left: -90%;
+    visibility: hidden;
+  }
+
+  .navmenu .dropdown .dropdown:hover>ul {
+    opacity: 1;
+    top: 0;
+    left: -100%;
+    visibility: visible;
+  }
+  .carousel {
+    width: 100vw;           /* Tràn hết chiều ngang màn hình */
+    max-width: 100vw;
+    margin: 32px 0 0 50%;
+    position: relative;
+    left: -50vw;            /* Đẩy carousel ra khỏi container cha */
+    right: 0;
+    height: 400px;
+    background: #fafafa;
+    border-radius: 0;        /* Nếu muốn bo góc, dùng border-radius: 24px; */
+    box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .carousel-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    object-position: center center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+    border-radius: 24px;
+  }
+  .carousel-img.active {
+    opacity: 1;
+    z-index: 2;
+  }
+}
+
+/* Navmenu - Mobile */
+@media (max-width: 800px) {
+  .nav-title-mobile {
+    flex: 1;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--nav-color);
+    display: block;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 60px;
+    padding: 0 16px;
+    background: var(--background-color);
+  }
+  .logo img {
+    height: 90px;
+    width: auto;
+    display: block;
+  }
+  .navmenu {
+    flex: 1;
+    position: relative;
+    z-index: 9997;
+  }
+  .mobile-nav-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    color: var(--nav-color);
+    z-index: 9999;
+    cursor: pointer;
+  }
+  .navmenu ul {
+    display: none;
+    position: absolute;
+    top: 60px; /* dưới header */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 340px;
+    padding: 18px 0;
+    margin: 0;
+    border-radius: 12px;
+    background-color: var(--nav-mobile-background-color);
+    box-shadow: 0px 4px 24px rgba(0,0,0,0.12);
+    z-index: 9998;
+    text-align: center;
+    }
+
+  .navmenu a,
+  .navmenu a:focus {
+    color: var(--nav-dropdown-color);
+    padding: 10px 20px;
+    font-family: var(--nav-font);
+    font-size: 17px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    transition: 0.3s;
+  }
+
+  .navmenu a i,
+  .navmenu a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.3s;
+    background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  }
+
+  .navmenu a i:hover,
+  .navmenu a:focus i:hover {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+  }
+
+  .navmenu a:hover,
+  .navmenu .active,
+  .navmenu .active:focus {
+    color: var(--nav-dropdown-hover-color);
+  }
+
+  .navmenu .active i,
+  .navmenu .active:focus i {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    transform: rotate(180deg);
+  }
+
+  .navmenu .dropdown ul {
+    position: static;
+    display: none;
+    z-index: 99;
+    padding: 10px 0;
+    margin: 10px 20px;
+    background-color: var(--nav-dropdown-background-color);
+    border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+    box-shadow: none;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .navmenu .dropdown ul ul {
+    background-color: rgba(33, 37, 41, 0.1);
+  }
+
+  .navmenu .dropdown>.dropdown-active {
+    display: block;
+    background-color: rgba(33, 37, 41, 0.03);
+  }
+
+  .mobile-nav-active {
+    overflow: hidden;
+  }
+
+  .mobile-nav-active .mobile-nav-toggle {
+    color: #fff;
+    position: absolute;
+    font-size: 32px;
+    top: 15px;
+    right: 15px;
+    margin-right: 0;
+    z-index: 9999;
+  }
+
+  .mobile-nav-active .navmenu {
+    position: fixed;
+    overflow: hidden;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    transition: 0.3s;
+  }
+
+  .mobile-nav-active .navmenu>ul {
+    display: block;
+  }
+  .carousel {
+    width: 100vw;
+    max-width: 100vw;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    height: 220px;
+    background: #fafafa;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .carousel-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+    border-radius: 12px;
+  }
+  .carousel-img.active {
+    opacity: 1;
+    z-index: 2;
+  }
+}
