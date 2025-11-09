@@ -55,3 +55,41 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(nextImage, 3000); // đổi ảnh mỗi 3 giây
   showImage(current);
 });
+
+// Fade up animation for trending-products
+document.addEventListener('DOMContentLoaded', function() {
+  const trendingSection = document.querySelector('.trending-products');
+  if (!trendingSection) return;
+
+  function fadeUpOnScroll() {
+    const rect = trendingSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      trendingSection.classList.add('fade-up');
+      window.removeEventListener('scroll', fadeUpOnScroll);
+    }
+  }
+  window.addEventListener('scroll', fadeUpOnScroll);
+  fadeUpOnScroll();
+});
+document.addEventListener('DOMContentLoaded', function() {
+  const productList = document.querySelector('.product-list');
+  if (!productList) return;
+
+  // Chỉ áp dụng trên mobile
+  if (window.innerWidth <= 800) {
+    let scrollAmount = 0;
+    let autoScroll = setInterval(() => {
+      scrollAmount += 180; // cuộn ngang bằng đúng 1 sản phẩm
+      if (scrollAmount >= productList.scrollWidth - productList.clientWidth) {
+        scrollAmount = 0;
+      }
+      productList.scrollTo({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }, 3500); // đổi sản phẩm mỗi 3.5 giây
+
+    // Dừng auto scroll khi người dùng chạm vào danh sách
+    productList.addEventListener('touchstart', () => clearInterval(autoScroll));
+  }
+});
