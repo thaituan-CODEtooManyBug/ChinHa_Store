@@ -93,3 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
     productList.addEventListener('touchstart', () => clearInterval(autoScroll));
   }
 });
+// Trượt sản phẩm bằng nút
+document.addEventListener('DOMContentLoaded', function () {
+  const bmtProductList = document.getElementById('bmtProductList');
+  const bmtPrev = document.getElementById('bmtPrev');
+  const bmtNext = document.getElementById('bmtNext');
+
+  if (bmtProductList && bmtPrev && bmtNext) {
+    bmtPrev.addEventListener('click', function () {
+      bmtProductList.scrollBy({ left: -220, behavior: 'smooth' });
+    });
+    bmtNext.addEventListener('click', function () {
+      bmtProductList.scrollBy({ left: 220, behavior: 'smooth' });
+    });
+  }
+});
+// ...existing code...
